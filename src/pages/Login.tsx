@@ -13,7 +13,6 @@ function LoginPage() {
         setShowGoogleLogin(null);
       }
     }
-
     window.addEventListener("keydown", keyPressHandler);
   }, []);
 
@@ -39,16 +38,29 @@ function LoginPage() {
           )}
           {showGoogleLogin && (
             <GoogleLogin
-              onSuccess={(credentialResponse) => {
-                console.log(credentialResponse);
+              onSuccess={async (credentialResponse) => {
+                fetch(
+                  `http://localhost:3000/login`,
+                  {
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    method: "post",
+                    body: JSON.stringify({
+                        credential: credentialResponse.credential
+                    })
+                  }
+                )
+                  .then(async (res) => console.log(await res.text()))
+                  .catch((err) => console.log(err));
               }}
               onError={() => {
                 console.log("Login Failed");
-              }}
-              ux_mode='redirect'
+              }} 
               theme='filled_black'
               locale='or'
-              useOneTap
+              ux_mode="redirect"
+              login_uri="http://localhost:3000/login"
             />
           )}
         </div>

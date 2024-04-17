@@ -1,6 +1,6 @@
-import ChatRoomsSection from "./components/Chat-room";
-import ChatSection from "./components/Chats";
-import MembersStatusSection from "./components/Members-status";
+import ChatRoomsSection from "../components/Chat-room";
+import ChatSection from "../components/Chats";
+import MembersStatusSection from "../components/Members-status";
 
 function HomePage() {
     return (

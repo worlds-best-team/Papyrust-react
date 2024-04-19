@@ -1,4 +1,5 @@
 import { GoogleLogin } from "@react-oauth/google";
+import axios from "axios";
 import { useEffect, useState } from "react";
 import { TypeAnimation } from "react-type-animation";
 
@@ -39,28 +40,21 @@ function LoginPage() {
           {showGoogleLogin && (
             <GoogleLogin
               onSuccess={async (credentialResponse) => {
-                fetch(
-                  `http://localhost:3000/login`,
-                  {
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    method: "post",
-                    body: JSON.stringify({
-                        credential: credentialResponse.credential
-                    })
-                  }
-                )
-                  .then(async (res) => console.log(await res.text()))
+                console.log(credentialResponse);
+                axios
+                  .post(`http://localhost:3000/login`, {
+                    credential:credentialResponse.credential
+                })
+                  .then(async (res) => console.log(res.data))
                   .catch((err) => console.log(err));
               }}
               onError={() => {
                 console.log("Login Failed");
-              }} 
+              }}
               theme='filled_black'
               locale='or'
-              ux_mode="redirect"
-              login_uri="http://localhost:3000/login"
+              ux_mode='redirect'
+              login_uri='http://localhost:3000/login'
             />
           )}
         </div>

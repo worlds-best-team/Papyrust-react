@@ -1,7 +1,7 @@
-import { GoogleLogin } from "@react-oauth/google";
-import axios from "axios";
 import { useEffect, useState } from "react";
 import { TypeAnimation } from "react-type-animation";
+import CreateChatRoom from "../components/Create-chat-room";
+import JoinChatRoom from "../components/Join-chat-room";
 
 function LoginPage() {
   const [showGoogleLogin, setShowGoogleLogin] = useState<boolean | null>(false);
@@ -18,47 +18,23 @@ function LoginPage() {
   }, []);
 
   return (
-    <div className='h-full w-full flex flex-col items-center justify-center bg-black'>
-      <div className='max-w-[550px] font-semibold w-full h-fit text-xl rounded-md p-8 text-green-500 bg-neutral-900 '>
+    <div className='h-full w-full p-6 bg-black'>
+      <h2 className="text-purple-500 text-lg font-medium"> &lt;anonymous@cipher-io:~%&gt;&nbsp;<span className="text-white">cipher-io init</span></h2>
+      <div className='font-semibold w-full h-fit text-lg rounded-md pt-4 text-green-500 '>
         <div>
           {showGoogleLogin === false && (
+            
             <TypeAnimation
-              sequence={["Login with Google to proceed? (Y/n)"]}
+              sequence={["Stop Looking Around!",2000,"What you are looking for is here.",2000,"We have cookies for visitors :)", 2000, "Press 'S' to create a new chat room, \n Press 'j' to join an existing chat room. (S/j) "]}
               wrapper='span'
-              speed={50}
+              speed={80}
               repeat={0}
-            />
-          )}
-          {showGoogleLogin === null && (
-            <TypeAnimation
-              sequence={["Exiting..."]}
-              wrapper='span'
-              speed={50}
-              repeat={0}
-            />
-          )}
-          {showGoogleLogin && (
-            <GoogleLogin
-              onSuccess={async (credentialResponse) => {
-                console.log(credentialResponse);
-                axios
-                  .post(`http://localhost:3000/login`, {
-                    credential:credentialResponse.credential
-                })
-                  .then(async (res) => console.log(res.data))
-                  .catch((err) => console.log(err));
-              }}
-              onError={() => {
-                console.log("Login Failed");
-              }}
-              theme='filled_black'
-              locale='or'
-              ux_mode='redirect'
-              login_uri='http://localhost:3000/login'
             />
           )}
         </div>
       </div>
+     <CreateChatRoom />
+      {/* <JoinChatRoom/> */}
     </div>
   );
 }

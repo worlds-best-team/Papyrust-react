@@ -20,3 +20,12 @@
   display: flex;
   flex-direction: column;
 }
+
+input {
+  @apply outline-none;
+}
+
+form button {
+  @apply hover:bg-white hover:text-gray-700 self-center;
+  width: fit-content !important;
+}

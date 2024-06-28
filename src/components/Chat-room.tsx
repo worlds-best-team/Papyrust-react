@@ -3,6 +3,7 @@ import { useUserProfileContext } from '../context/UserContext';
 
 function ChatRoomsSection() {
   const [userProfile, _] = useUserProfileContext();
+
   return (
     <div className="bg-gray-700 flex flex-col h-full">
       <h2 className="sticky text-center">Chat Room</h2>

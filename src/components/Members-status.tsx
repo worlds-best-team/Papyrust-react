@@ -42,11 +42,13 @@ function MembersStatusSection() {
       <h2 className="sticky text-center">Member's Online</h2>
       <div className="bg-gray-800 p-3 flex-grow">
         <ul className="*:block">
-          {activeMembers.map((m) => (
-            <div key={m.user_token_hash}>
-              <span className="text-green-500">●</span>&nbsp;{m.userName}
-            </div>
-          ))}
+          {activeMembers
+            .sort((a, b) => a.userName.localeCompare(b.userName))
+            .map((m) => (
+              <div key={m.user_token_hash}>
+                <span className="text-green-500">●</span>&nbsp;{m.userName}
+              </div>
+            ))}
         </ul>
       </div>
     </div>

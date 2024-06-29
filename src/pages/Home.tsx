@@ -18,7 +18,9 @@ function HomePage() {
           <Route element={<ChatSection />} path="/:chatRoomName" />
         </Routes>
 
-        <MembersStatusSection />
+        <Routes>
+          <Route element={<MembersStatusSection />} path="/:chatRoomName" />
+        </Routes>
       </div>
     </div>
   );

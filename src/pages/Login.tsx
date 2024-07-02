@@ -55,7 +55,11 @@ function LoginPage() {
         <>
           <div className="text-white text-lg font-medium">
             <br />
-            <pre>{userProfile ? JSON.stringify(userProfile, null, 4) : ''}</pre>
+            <div className="h-[450px] bg-zinc-900 border rounded-md border-none">
+              <div className="h-full overflow-auto">
+                <pre className="whitespace-pre-wrap">{userProfile ? JSON.stringify(userProfile, null, 4) : ''}</pre>
+              </div>
+            </div>
             <br />
           </div>
           <div className="text-green-500 text-lg font-medium">

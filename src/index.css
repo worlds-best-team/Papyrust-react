@@ -29,3 +29,6 @@ form button {
   @apply hover:bg-white hover:text-gray-700 self-center;
   width: fit-content !important;
 }
+/* ::-webkit-scrollbar {
+  display: none;
+} */

@@ -42,11 +42,11 @@ function ChatSection() {
   return (
     <div className="bg-gray-700 flex flex-col">
       <h2 className="sticky text-center">Chats</h2>
-      <div className="bg-gray-800 p-3 flex-grow">
+      <div className="bg-gray-800 p-3 flex-grow h-[600px] ">
         {!!data && (
-          <ul>
+          <ul className="h-full overflow-y-scroll">
             {data.payload.messages.map((message) => (
-              <li key={message._id}>
+              <li key={message._id} className="whitespace-pre-wrap">
                 <span className="text-gray-500">{message.sender_username}: </span>
                 {message.content}
               </li>

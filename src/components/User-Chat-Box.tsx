@@ -1,18 +1,34 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { cipherioTRPCClient } from '../../trpc/client';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 import { useParams } from 'react-router-dom';
 import { useUserProfileContext } from '../context/UserContext';
+import { MessageBodyZSchema } from '../../../types/trpc';
+import { z } from 'zod';
 
-function UserChatBox() {
+function UserChatBox({
+  messageListSetter,
+}: {
+  messageListSetter: React.Dispatch<React.SetStateAction<z.infer<typeof MessageBodyZSchema>[]>>;
+}) {
   const { chatRoomName } = useParams<{ chatRoomName: string }>();
   const [userProfile, _] = useUserProfileContext();
   const [message, setMessage] = useState<string>('');
-  const queryClient = useQueryClient();
   const sendMessageMutation = useMutation({
     mutationKey: ['send_message'],
-    mutationFn: () =>
-      cipherioTRPCClient.chat.sendMessage.mutate({
+    mutationFn: () => {
+      messageListSetter((prev) => [
+        ...prev,
+        {
+          content: message.trim(),
+          sender_token_hash: 'redacted[self]',
+          sender_username: userProfile?.savedChatRooms.filter((chatRoom) => chatRoom.name === chatRoomName)[0]
+            .username as string,
+          reply_to: null,
+        },
+      ]);
+
+      return cipherioTRPCClient.chat.sendMessage.mutate({
         chatRoomName: chatRoomName as string,
         password: userProfile?.savedChatRooms.filter((chatRoom) => chatRoom.name === chatRoomName)[0]
           .password as string,
@@ -22,11 +38,10 @@ function UserChatBox() {
           sender_username: userProfile?.savedChatRooms.filter((chatRoom) => chatRoom.name === chatRoomName)[0]
             .username as string,
         },
-      }),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['chat_room_messages', chatRoomName] });
+      });
     },
   });
+
   return (
     <div className="flex flex-row my-2 w-full gap-2">
       <textarea

@@ -2,13 +2,17 @@ import { useQuery } from '@tanstack/react-query';
 import { useParams } from 'react-router-dom';
 import { cipherioTRPCClient } from '../../trpc/client';
 import { useUserProfileContext } from '../context/UserContext';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { z } from 'zod';
 import UserChatBox from './User-Chat-Box';
+import { MessageBodyZSchema } from '../../../types/trpc';
 
 function ChatSection() {
   const { chatRoomName } = useParams<{ chatRoomName: string }>();
   const [userProfile, _] = useUserProfileContext();
-  const { data, refetch } = useQuery({
+  const [newMsgList, setNewMsgList] = useState<z.infer<typeof MessageBodyZSchema>[]>([]);
+
+  const { data } = useQuery({
     queryKey: ['chat_room_messages', chatRoomName],
     queryFn: () =>
       cipherioTRPCClient.chat.getMessages.query({
@@ -25,8 +29,8 @@ function ChatSection() {
     const subscription = cipherioTRPCClient.chat.onNewMessage.subscribe(
       { chatRoomName: chatRoomName!, password: localChatRoom!.password, user_token_hash: userProfile!.userToken },
       {
-        onData() {
-          refetch();
+        onData(data) {
+          setNewMsgList((prev) => [...prev, data]);
         },
         onError(err) {
           console.error('Subscription error:', err);
@@ -37,7 +41,7 @@ function ChatSection() {
     return () => {
       subscription.unsubscribe();
     };
-  }, [chatRoomName, userProfile, refetch]);
+  }, [chatRoomName, userProfile]);
 
   return (
     <div className="bg-gray-700 flex flex-col">
@@ -54,7 +58,7 @@ function ChatSection() {
           </ul>
         )}
       </div>
-      <UserChatBox />
+      <UserChatBox messageListSetter={setNewMsgList} />
     </div>
   );
 }

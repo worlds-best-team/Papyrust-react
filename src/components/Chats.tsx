@@ -3,14 +3,14 @@ import { useParams } from 'react-router-dom';
 import { cipherioTRPCClient } from '../../trpc/client';
 import { useUserProfileContext } from '../context/UserContext';
 import { useEffect, useState } from 'react';
-import { z } from 'zod';
 import UserChatBox from './User-Chat-Box';
-import { MessageBodyZSchema } from '../../../types/trpc';
+import { CiMessagePostflight, CiMessagePreflight } from '../core/CiMessage';
+import { generateRandomHexString } from '../../utils/crypto';
 
 function ChatSection() {
   const { chatRoomName } = useParams<{ chatRoomName: string }>();
   const [userProfile, _] = useUserProfileContext();
-  const [newMsgList, setNewMsgList] = useState<z.infer<typeof MessageBodyZSchema>[]>([]);
+  const [newMsgList, setNewMsgList] = useState<(CiMessagePreflight | CiMessagePostflight)[]>([]);
 
   const { data } = useQuery({
     queryKey: ['chat_room_messages', chatRoomName],
@@ -30,7 +30,12 @@ function ChatSection() {
       { chatRoomName: chatRoomName!, password: localChatRoom!.password, user_token_hash: userProfile!.userToken },
       {
         onData(data) {
-          setNewMsgList((prev) => [...prev, data]);
+          const createdAt = new Date().toISOString();
+          const salt = generateRandomHexString(12);
+          setNewMsgList((prev) => [
+            ...prev,
+            new CiMessagePostflight({ messageBody: data, key: `${createdAt}-S${salt}`, createdAt }),
+          ]);
         },
         onError(err) {
           console.error('Subscription error:', err);
@@ -49,7 +54,7 @@ function ChatSection() {
       <div className="bg-gray-800 p-3 flex-grow h-[600px] ">
         {!!data && (
           <ul className="h-full overflow-y-scroll">
-            {data.payload.messages.map((message) => (
+            {data.payload!.messages.map((message: any) => (
               <li key={message._id} className="whitespace-pre-wrap">
                 <span className="text-gray-500">{message.sender_username}: </span>
                 {message.content}
@@ -58,7 +63,7 @@ function ChatSection() {
           </ul>
         )}
       </div>
-      <UserChatBox messageListSetter={setNewMsgList} />
+      <UserChatBox setNewMsgList={setNewMsgList} />
     </div>
   );
 }

@@ -7,7 +7,7 @@ export function generateRandomHexString(length: number) {
   }
   return result;
 }
-export async function digest(message: string, algo = 'SHA-256') {
+export async function sha256(message: string, algo = 'SHA-256') {
   return Array.from(new Uint8Array(await crypto.subtle.digest(algo, new TextEncoder().encode(message))), (byte) =>
     byte.toString(16).padStart(2, '0'),
   ).join('');

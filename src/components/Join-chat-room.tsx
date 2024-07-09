@@ -21,7 +21,7 @@ function JoinChatRoom() {
         userToken: userProfile ? userProfile.userToken : '',
       }),
     onSuccess: (data) => {
-      const { chatRoomName, password } = data.payload;
+      const { chatRoomName, password } = data.payload!;
       setUserProfile(pushNewRoomtoLocalStore({ chatRoomName, password, username: userName }));
       navigate('/home');
     },

@@ -1,6 +1,8 @@
 import { z } from 'zod';
 import { MessageBodyZSchema, SendMessageInputZSchema, SendMessageOutputZSchema } from '../../../types/trpc';
 import { cipherioTRPCClient } from '../../trpc/client';
+import { generateRandomHexString } from '../../utils/crypto';
+import React from 'react';
 
 export class CiMessagePreflight {
   public isSent: boolean;
@@ -8,20 +10,35 @@ export class CiMessagePreflight {
   public messageBody: z.infer<typeof MessageBodyZSchema>;
   public chatRoomPassword: string;
   public chatRoomName: string;
+  public key: string;
+  public createdAt: string;
 
-  constructor({ chatRoomName, password, messageBody }: z.infer<typeof SendMessageInputZSchema>) {
+  private readonly setNewMsgList: React.Dispatch<React.SetStateAction<(CiMessagePreflight | CiMessagePostflight)[]>>;
+
+  constructor(
+    { chatRoomName, password, messageBody }: z.infer<typeof SendMessageInputZSchema>,
+    setNewMsgList: React.Dispatch<React.SetStateAction<(CiMessagePreflight | CiMessagePostflight)[]>>,
+  ) {
     this.isSent = false;
     this.isFailed = false;
     this.messageBody = messageBody;
     this.chatRoomPassword = password;
     this.chatRoomName = chatRoomName;
+    this.setNewMsgList = setNewMsgList;
+
+    const createdAt = new Date().toISOString();
+    const salt = generateRandomHexString(12);
+    this.key = `${createdAt}-S${salt}`;
+    this.createdAt = createdAt;
 
     this.sendMessage({ chatRoomName, password, messageBody })
       .then((sendMessageOutput) => {
         this.isSent = sendMessageOutput.success;
+        this.setNewMsgList((p) => [...p]);
       })
       .catch(() => {
         this.isFailed = true;
+        this.setNewMsgList((p) => [...p]);
       });
   }
 
@@ -51,17 +68,11 @@ export class CiMessagePostflight {
   public key: string;
   public createdAt: string;
 
-  constructor({
-    messageBody,
-    key,
-    createdAt,
-  }: {
-    messageBody: z.infer<typeof MessageBodyZSchema>;
-    key: string;
-    createdAt: string;
-  }) {
+  constructor({ messageBody }: { messageBody: z.infer<typeof MessageBodyZSchema> }) {
+    const createdAt = new Date().toISOString();
+    const salt = generateRandomHexString(12);
+    this.key = `${createdAt}-S${salt}`;
     this.messageBody = messageBody;
-    this.key = key;
     this.createdAt = createdAt;
   }
 }

@@ -18,18 +18,21 @@ function UserChatBox({
 
     setNewMsgList((prev) => [
       ...prev,
-      new CiMessagePreflight({
-        chatRoomName: chatRoomName!,
-        messageBody: {
-          content: message.trim(),
-          sender_token_hash: userTokenHash,
-          sender_username: userProfile?.savedChatRooms.filter((chatRoom) => chatRoom.name === chatRoomName)[0]
-            .username as string,
-          reply_to: null,
+      new CiMessagePreflight(
+        {
+          chatRoomName: chatRoomName!,
+          messageBody: {
+            content: message.trim(),
+            sender_token_hash: userTokenHash,
+            sender_username: userProfile?.savedChatRooms.filter((chatRoom) => chatRoom.name === chatRoomName)[0]
+              .username as string,
+            reply_to: null,
+          },
+          password: userProfile?.savedChatRooms.filter((chatRoom) => chatRoom.name === chatRoomName)[0]
+            .password as string,
         },
-        password: userProfile?.savedChatRooms.filter((chatRoom) => chatRoom.name === chatRoomName)[0]
-          .password as string,
-      }),
+        setNewMsgList,
+      ),
     ]);
   }
 

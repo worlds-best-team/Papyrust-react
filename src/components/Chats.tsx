@@ -146,7 +146,7 @@ function ChatSection() {
                     )}
                     {message.isSent === false && message.isFailed === true && (
                       <button onClick={message.retry} className="text-red-500">
-                        Retry...
+                        {message.messageBody.content}
                       </button>
                     )}
                     {message.isSent === true && message.isFailed === false && (

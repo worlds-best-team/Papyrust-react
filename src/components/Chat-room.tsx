@@ -1,6 +1,5 @@
 import { Link } from 'react-router-dom';
 import { useUserProfileContext } from '../context/UserContext';
-import CreateChatRoom from './Create-chat-room';
 
 function ChatRoomsSection() {
   const [userProfile, _] = useUserProfileContext();

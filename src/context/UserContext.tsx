@@ -1,6 +1,6 @@
 'use client';
 import React, { useState, useContext, createContext } from 'react';
-import { UserProfileSchema } from '../../utils/core';
+import { UserProfileSchema } from '../utils/core';
 import { z } from 'zod';
 
 type UserProfile = z.infer<typeof UserProfileSchema>;

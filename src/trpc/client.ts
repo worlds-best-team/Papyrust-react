@@ -1,5 +1,5 @@
 import { createTRPCProxyClient, createWSClient, httpBatchLink, splitLink, wsLink } from '@trpc/client';
-import type { AppRouter } from '../../routers/app';
+import type { AppRouter } from '../../../routers/app';
 
 export const cipherioTRPCClient = createTRPCProxyClient<AppRouter>({
   links: [

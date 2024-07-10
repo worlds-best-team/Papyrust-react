@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useMutation } from '@tanstack/react-query';
-import { pushNewRoomtoLocalStore } from '../../utils/core';
+import { pushNewRoomtoLocalStore } from '../utils/core';
 import { useUserProfileContext } from '../context/UserContext';
-import { cipherioTRPCClient } from '../../trpc/client';
+import { cipherioTRPCClient } from '../trpc/client';
 
 function JoinChatRoom() {
   const [userName, setUserName] = useState<string>('');

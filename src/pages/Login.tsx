@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { TypeAnimation } from 'react-type-animation';
 import CreateChatRoom from '../components/Create-chat-room';
 import JoinChatRoom from '../components/Join-chat-room';
-import { initOrGetUserProfile } from '../../utils/core';
+import { initOrGetUserProfile } from '../utils/core';
 import { useUserProfileContext } from '../context/UserContext';
 
 function LoginPage() {

@@ -29,6 +29,25 @@ form button {
   @apply hover:bg-white hover:text-gray-700 self-center;
   width: fit-content !important;
 }
-/* ::-webkit-scrollbar {
-  display: none;
-} */
+
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+  background-color: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  width: 2px;
+  height: 5px;
+  background-color: #ffffff96;
+  border-radius: 2.5px;
+}
+
+.no-scrollbar {
+  scrollbar-width: 0;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}

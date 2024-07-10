@@ -1,9 +1,9 @@
 import { useMutation } from '@tanstack/react-query';
-import { cipherioTRPCClient } from '../../trpc/client';
+import { cipherioTRPCClient } from '../trpc/client';
 import { useState } from 'react';
 import { usernamify } from '../../../utils/string';
 import { useUserProfileContext } from '../context/UserContext';
-import { pushNewRoomtoLocalStore } from '../../utils/core';
+import { pushNewRoomtoLocalStore } from '../utils/core';
 import { useNavigate } from 'react-router-dom';
 
 function CreateChatRoom() {
@@ -22,7 +22,7 @@ function CreateChatRoom() {
         adminToken: userProfile ? userProfile.userToken : '',
       }),
     onSuccess: (data) => {
-      const { chatRoomName, password } = data.payload;
+      const { chatRoomName, password } = data.payload!;
       setUserProfile(pushNewRoomtoLocalStore({ chatRoomName, password, username: userName }));
       navigate('/home');
     },

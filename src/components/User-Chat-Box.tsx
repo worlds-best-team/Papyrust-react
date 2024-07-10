@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useUserProfileContext } from '../context/UserContext';
 import { CiMessagePostflight, CiMessagePreflight } from '../core/CiMessage';
-import { sha256 } from '../../utils/crypto';
+import { sha256 } from '../utils/crypto';
 
 function UserChatBox({
   setNewMsgList,

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useUserProfileContext } from '../context/UserContext';
-import { cipherioTRPCClient } from '../../trpc/client';
+import { cipherioTRPCClient } from '../trpc/client';
 
 function MembersStatusSection() {
   const [activeMembers, setActiveMembers] = useState<ActiveMember[]>([]);

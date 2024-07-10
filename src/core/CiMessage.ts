@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { MessageBodyZSchema, SendMessageInputZSchema, SendMessageOutputZSchema } from '../../../types/trpc';
-import { cipherioTRPCClient } from '../../trpc/client';
-import { generateRandomHexString } from '../../utils/crypto';
+import { cipherioTRPCClient } from '../trpc/client';
+import { generateRandomHexString } from '../utils/crypto';
 import React from 'react';
 
 export class CiMessagePreflight {
@@ -32,8 +32,8 @@ export class CiMessagePreflight {
     this.createdAt = createdAt;
 
     this.sendMessage({ chatRoomName, password, messageBody })
-      .then((sendMessageOutput) => {
-        this.isSent = sendMessageOutput.success;
+      .then(() => {
+        this.isSent = true;
         this.setNewMsgList((p) => [...p]);
       })
       .catch(() => {
@@ -55,11 +55,24 @@ export class CiMessagePreflight {
   }
 
   public async retry() {
-    return cipherioTRPCClient.chat.sendMessage.mutate({
-      chatRoomName: this.chatRoomName,
-      password: this.chatRoomPassword,
-      messageBody: this.messageBody,
-    });
+    this.isSent = false;
+    this.isFailed = false;
+    this.setNewMsgList((p) => [...p]);
+
+    cipherioTRPCClient.chat.sendMessage
+      .mutate({
+        chatRoomName: this.chatRoomName,
+        password: this.chatRoomPassword,
+        messageBody: this.messageBody,
+      })
+      .then(() => {
+        this.isSent = true;
+        this.setNewMsgList((p) => [...p]);
+      })
+      .catch(() => {
+        this.isFailed = true;
+        this.setNewMsgList((p) => [...p]);
+      });
   }
 }
 

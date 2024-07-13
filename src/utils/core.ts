@@ -14,14 +14,18 @@ export const UserProfileSchema = z.object({
     .min(0),
 });
 
-export function initOrGetUserProfile() {
+export function getLocalUserProfile(): false | z.infer<typeof UserProfileSchema> {
   const userProfileStringFromLocal = localStorage.getItem('user_profile');
 
   const parsedUserProfile = JSON.parse(userProfileStringFromLocal ?? '{}');
 
   if (UserProfileSchema.safeParse(parsedUserProfile).success) return parsedUserProfile;
 
-  let freshUserProfile: z.infer<typeof UserProfileSchema> = {
+  return false;
+}
+
+export function initLocalUserProfile() {
+  const freshUserProfile: z.infer<typeof UserProfileSchema> = {
     userToken: generateRandomHexString(64),
     savedChatRooms: [],
   };

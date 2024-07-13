@@ -2,29 +2,26 @@ import { useEffect, useState } from 'react';
 import { TypeAnimation } from 'react-type-animation';
 import CreateChatRoom from '../components/Create-chat-room';
 import JoinChatRoom from '../components/Join-chat-room';
-import { initOrGetUserProfile } from '../utils/core';
+import { getLocalUserProfile, initLocalUserProfile, UserProfileSchema } from '../utils/core';
 import { useUserProfileContext } from '../context/UserContext';
+import { z } from 'zod';
 
 function LoginPage() {
   const [showForm, setShowForm] = useState<'s' | 'j' | false>(false);
   const [showInitialise, setShowInitialise] = useState<boolean>(false);
   const [showUserDump, setShowUserDump] = useState<boolean>(false);
-  const [userProfile, setUserProfile] = useUserProfileContext();
+  const [_, setUserProfile] = useUserProfileContext();
 
   useEffect(() => {
-    function keyPressHandler(event: KeyboardEvent) {
-      if (['s', 'j'].includes(event.key.toLowerCase())) setShowForm(event.key.toLowerCase() as 's' | 'j');
-      window.removeEventListener('keydown', keyPressHandler);
-    }
-    window.addEventListener('keydown', keyPressHandler);
-  }, []);
+    let localUserProfile: z.infer<typeof UserProfileSchema> | false;
 
-  useEffect(() => {
+    localUserProfile = getLocalUserProfile();
+    if (!localUserProfile) localUserProfile = initLocalUserProfile();
+
     setTimeout(() => {
       setShowInitialise(true);
       setTimeout(() => {
-        const localUserProfile = initOrGetUserProfile();
-        setUserProfile(localUserProfile);
+        setUserProfile(localUserProfile!);
         setShowUserDump(true);
       }, 2000);
     }, 8000);
@@ -53,27 +50,30 @@ function LoginPage() {
       {showInitialise && <div className="text-white text-lg font-medium">Initialising user profile...</div>}
       {showUserDump && (
         <>
-          <div className="text-white text-lg font-medium">
-            <br />
-            <div className="h-[450px] bg-zinc-900 border rounded-md border-none">
-              <div className="h-full overflow-auto">
-                <pre className="whitespace-pre-wrap">{userProfile ? JSON.stringify(userProfile, null, 4) : ''}</pre>
-              </div>
-            </div>
-            <br />
-          </div>
+          <br />
+
           <div className="text-green-500 text-lg font-medium">
-            <TypeAnimation
-              sequence={["Press 'S' to create a new chat room, \n Press 'j' to join an existing chat room. (S/j)"]}
-              wrapper="span"
-              speed={80}
-              repeat={0}
-            />
+            <button onClick={() => setShowForm('s')}>Create</button> a new chat room, or{' '}
+            <button onClick={() => setShowForm('j')}>Join</button> an existing chat room.
           </div>
         </>
       )}
-      {showForm === 's' && <CreateChatRoom />}
-      {showForm === 'j' && <JoinChatRoom />}
+      {showForm === 's' && (
+        <CreateChatRoom
+          setShow={(b: boolean) => {
+            if (b) setShowForm('s');
+            else setShowForm(false);
+          }}
+        />
+      )}
+      {showForm === 'j' && (
+        <JoinChatRoom
+          setShow={(b: boolean) => {
+            if (b) setShowForm('j');
+            else setShowForm(false);
+          }}
+        />
+      )}
     </div>
   );
 }

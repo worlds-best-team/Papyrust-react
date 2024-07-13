@@ -119,6 +119,7 @@ function ChatSection() {
           <span className="text-gray-600 text-xs">{getFormattedHourMin(new Date(ciMessage.createdAt))}</span>
           &nbsp;
           <span className="text-amber-300">{ciMessage.messageBody.sender_username}</span>
+          &nbsp;
           <>
             {ciMessage.isSent === false && ciMessage.isFailed === false && (
               <span className="text-gray-400">{ciMessage.messageBody.content}</span>

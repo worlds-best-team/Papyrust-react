@@ -1,8 +1,13 @@
 import { Link } from 'react-router-dom';
 import { useUserProfileContext } from '../context/UserContext';
+import { useState } from 'react';
+import CreateChatRoom from './Create-chat-room';
+import JoinChatRoom from './Join-chat-room';
 
 function ChatRoomsSection() {
   const [userProfile, _] = useUserProfileContext();
+  const [showCreate, setShowCreate] = useState<boolean>(false);
+  const [showJoin, setShowJoin] = useState<boolean>(false);
 
   return (
     <div className="bg-gray-700 flex flex-col h-full">
@@ -19,10 +24,27 @@ function ChatRoomsSection() {
         </ul>
 
         <div className=" flex flex-col gap-3 align-center absolute bottom-3">
-          <Link to={'/CreateChatRoom'}>
-            <button className="bg-gray-600 p-2 w-[200px]">Create Chatroom</button>
-          </Link>
-          <button className="bg-gray-600 p-2 w-[200px]">Join Chatroom</button>
+          <button
+            className="bg-gray-600 p-2 w-[200px]"
+            onClick={() => {
+              setShowCreate(true);
+              setShowJoin(false);
+            }}
+          >
+            Create Chatroom
+          </button>
+          {showCreate && <CreateChatRoom setShow={setShowCreate} />}
+
+          <button
+            className="bg-gray-600 p-2 w-[200px]"
+            onClick={() => {
+              setShowJoin(true);
+              setShowCreate(false);
+            }}
+          >
+            Join Chatroom
+          </button>
+          {showJoin && <JoinChatRoom setShow={setShowJoin} />}
         </div>
       </div>
     </div>

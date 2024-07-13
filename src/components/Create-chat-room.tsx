@@ -1,12 +1,12 @@
 import { useMutation } from '@tanstack/react-query';
 import { cipherioTRPCClient } from '../trpc/client';
-import { useState } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
 import { usernamify } from '../../../utils/string';
 import { useUserProfileContext } from '../context/UserContext';
 import { pushNewRoomtoLocalStore } from '../utils/core';
 import { useNavigate } from 'react-router-dom';
 
-function CreateChatRoom() {
+function CreateChatRoom({ setShow }: { setShow: Dispatch<SetStateAction<boolean>> | ((arg0: boolean) => void) }) {
   const [userName, setUserName] = useState<string>('');
   const [chatRoomName, setChatRoomName] = useState<string>('');
   const [chatRoomPassword, setChatRoomPassword] = useState<string>('');
@@ -41,19 +41,40 @@ function CreateChatRoom() {
         >
           <div className="py-5">
             <label className="text-gray-400">Enter chat room name</label>
-            <input type="text" name="name" maxLength={30} onChange={(evt) => setChatRoomName(evt.target.value)} />
+            <input
+              type="text"
+              name="name"
+              maxLength={30}
+              onChange={(evt) => setChatRoomName(evt.target.value)}
+              className="text-black"
+            />
           </div>
           <div>
             <label className="text-gray-400">Set your username for #{usernamify(chatRoomName)}</label>
-            <input type="text" name="name" onChange={(evt) => setUserName(usernamify(evt.target.value))} />
+            <input
+              type="text"
+              name="name"
+              onChange={(evt) => setUserName(usernamify(evt.target.value))}
+              className="text-black"
+            />
           </div>
           <div>
             <label className="text-gray-400">Create a password</label>
-            <input type="password" name="name" onChange={(evt) => setChatRoomPassword(evt.target.value)} />
+            <input
+              type="password"
+              name="name"
+              onChange={(evt) => setChatRoomPassword(evt.target.value)}
+              className="text-black"
+            />
           </div>
-          <button type="submit" className="text-white">
-            &lt;Create&gt;
-          </button>
+          <div className="flex flex-row justify-between gap-3">
+            <button className="text-white" onClick={() => setShow(false)}>
+              &lt;Dismiss&gt;
+            </button>
+            <button type="submit" className="text-white">
+              &lt;Create&gt;
+            </button>
+          </div>
         </form>
       </div>
     </div>

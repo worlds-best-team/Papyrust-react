@@ -12,7 +12,7 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <UserContextProvider>
         <Routes>
-          <Route path="/login" element={<LoginPage />} />
+          <Route path="/" element={<LoginPage />} />
           <Route path="/home/*" element={<HomePage />} />
           <Route path="/error" element={<ErrorPage />} />
         </Routes>

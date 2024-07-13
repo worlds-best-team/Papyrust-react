@@ -1,11 +1,11 @@
-import { useState } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useMutation } from '@tanstack/react-query';
 import { pushNewRoomtoLocalStore } from '../utils/core';
 import { useUserProfileContext } from '../context/UserContext';
 import { cipherioTRPCClient } from '../trpc/client';
 
-function JoinChatRoom() {
+function JoinChatRoom({ setShow }: { setShow: Dispatch<SetStateAction<boolean>> | ((arg0: boolean) => void) }) {
   const [userName, setUserName] = useState<string>('');
   const [chatRoomInviteCode, setChatRoomInviteCode] = useState<string>('');
   const [chatRoomPassword, setChatRoomPassword] = useState<string>('');
@@ -39,12 +39,17 @@ function JoinChatRoom() {
         >
           <div className="py-5">
             <label className="text-gray-400">Enter a username</label>
-            <input className="w-full" type="text" name="name" onChange={(evt) => setUserName(evt.target.value)} />
+            <input
+              className="w-full text-black"
+              type="text"
+              name="name"
+              onChange={(evt) => setUserName(evt.target.value)}
+            />
           </div>
           <div className="">
             <label className="text-gray-400 ">Invite code of the chat room</label>
             <input
-              className="w-full"
+              className="w-full text-black"
               type="text"
               name="name"
               onChange={(evt) => setChatRoomInviteCode(evt.target.value)}
@@ -53,15 +58,20 @@ function JoinChatRoom() {
           <div className="py-5 flex flex-col">
             <label className="text-gray-400">Type Password here</label>
             <input
-              className="w-full"
+              className="w-full text-black"
               type="text"
               name="name"
               onChange={(evt) => setChatRoomPassword(evt.target.value)}
             />
           </div>
-          <button type="submit" className="text-white">
-            &lt;Join&gt;
-          </button>
+          <div className="flex flex-row justify-between gap-3">
+            <button type="submit" className="text-white" onClick={() => setShow(false)}>
+              &lt;Dismiss&gt;
+            </button>
+            <button type="submit" className="text-white">
+              &lt;Join&gt;
+            </button>
+          </div>
         </form>
       </div>
     </div>

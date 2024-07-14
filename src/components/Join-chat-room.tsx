@@ -23,7 +23,8 @@ function JoinChatRoom({ setShow }: { setShow: Dispatch<SetStateAction<boolean>> 
     onSuccess: (data) => {
       const { chatRoomName, password } = data.payload!;
       setUserProfile(pushNewRoomtoLocalStore({ chatRoomName, password, username: userName }));
-      navigate('/home');
+      setShow(false);
+      navigate('/home/' + chatRoomName);
     },
   });
   return (
@@ -31,13 +32,13 @@ function JoinChatRoom({ setShow }: { setShow: Dispatch<SetStateAction<boolean>> 
       <div className="bg-neutral-900 p-5 flex flex-col items-center justify-center">
         <h2 className="text-yellow-400">[ Join an existing chat room ]</h2>
         <form
-          className="flex flex-col items-left gap-2 pt-5 w-full"
+          className="flex flex-col items-left gap-2 pt-5 *:py-2 w-full"
           onSubmit={(evt) => {
             evt.preventDefault();
             joinRoomMutation.mutate();
           }}
         >
-          <div className="py-5">
+          <div className="">
             <label className="text-gray-400">Enter a username</label>
             <input
               className="w-full text-black"

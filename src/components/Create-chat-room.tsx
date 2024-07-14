@@ -24,29 +24,30 @@ function CreateChatRoom({ setShow }: { setShow: Dispatch<SetStateAction<boolean>
     onSuccess: (data) => {
       const { chatRoomName, password } = data.payload!;
       setUserProfile(pushNewRoomtoLocalStore({ chatRoomName, password, username: userName }));
-      navigate('/home');
+      setShow(false);
+      navigate('/home/' + chatRoomName);
     },
   });
 
   return (
     <div className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px]">
-      <div className="bg-neutral-900 p-5">
+      <div className="bg-neutral-900 p-5 flex flex-col items-center justify-center">
         <h2 className="text-yellow-400">[ Create your chat room ]</h2>
         <form
-          className="flex flex-col items-left gap-2 pt-5"
+          className="flex flex-col items-center gap-2 pt-5 *:py-2 w-full"
           onSubmit={(evt) => {
             evt.preventDefault();
             createRoomMutation.mutate();
           }}
         >
-          <div className="py-5">
+          <div>
             <label className="text-gray-400">Enter chat room name</label>
             <input
               type="text"
               name="name"
               maxLength={30}
               onChange={(evt) => setChatRoomName(evt.target.value)}
-              className="text-black"
+              className="text-black w-full"
             />
           </div>
           <div>
@@ -55,7 +56,7 @@ function CreateChatRoom({ setShow }: { setShow: Dispatch<SetStateAction<boolean>
               type="text"
               name="name"
               onChange={(evt) => setUserName(usernamify(evt.target.value))}
-              className="text-black"
+              className="text-black w-full"
             />
           </div>
           <div>
@@ -64,14 +65,14 @@ function CreateChatRoom({ setShow }: { setShow: Dispatch<SetStateAction<boolean>
               type="password"
               name="name"
               onChange={(evt) => setChatRoomPassword(evt.target.value)}
-              className="text-black"
+              className="text-black w-full"
             />
           </div>
-          <div className="flex flex-row justify-between gap-3">
+          <div className="flex flex-row justify-between w-full">
             <button className="text-white" onClick={() => setShow(false)}>
               &lt;Dismiss&gt;
             </button>
-            <button type="submit" className="text-white">
+            <button tabIndex={0} type="submit" className="text-white">
               &lt;Create&gt;
             </button>
           </div>

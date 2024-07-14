@@ -41,12 +41,17 @@ function MembersStatusSection() {
     <div className="bg-gray-700 flex flex-col">
       <h2 className="sticky text-center">Member's Online</h2>
       <div className="bg-gray-800 p-3 flex-grow">
-        <ul className="*:block overflow-auto h-full">
+        <ul className="overflow-auto h-full w-full">
           {activeMembers
             .sort((a, b) => a.userName.localeCompare(b.userName))
             .map((m) => (
-              <div key={m.user_token_hash}>
-                <span className="text-green-500 whitespace-pre-wrap">●</span>&nbsp;{m.userName}
+              <div key={m.user_token_hash} className="flex flex-row w-full justify-between items-center group">
+                <div className="w-fit">
+                  <span className="text-green-500 whitespace-pre-wrap">●</span>&nbsp;{m.userName}
+                </div>
+                <span className="group-hover:block cursor-pointer hidden text-red-500 underline underline-offset-4">
+                  blacklist
+                </span>
               </div>
             ))}
         </ul>

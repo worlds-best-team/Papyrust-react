@@ -53,8 +53,14 @@ function LoginPage() {
           <br />
 
           <div className="text-green-500 text-lg font-medium">
-            <button onClick={() => setShowForm('s')}>Create</button> a new chat room, or{' '}
-            <button onClick={() => setShowForm('j')}>Join</button> an existing chat room.
+            <button onClick={() => setShowForm('s')} className="bg-gray-100 p-2">
+              Create
+            </button>{' '}
+            a new chat room, or{' '}
+            <button onClick={() => setShowForm('j')} className="bg-gray-100 p-2">
+              Join
+            </button>{' '}
+            an existing chat room.
           </div>
         </>
       )}

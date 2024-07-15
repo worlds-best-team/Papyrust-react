@@ -5,12 +5,14 @@ import JoinChatRoom from '../components/Join-chat-room';
 import { getLocalUserProfile, initLocalUserProfile, UserProfileSchema } from '../utils/core';
 import { useUserProfileContext } from '../context/UserContext';
 import { z } from 'zod';
+import { useNavigate } from 'react-router-dom';
 
 function LoginPage() {
   const [showForm, setShowForm] = useState<'s' | 'j' | false>(false);
   const [showInitialise, setShowInitialise] = useState<boolean>(false);
   const [showUserDump, setShowUserDump] = useState<boolean>(false);
   const [_, setUserProfile] = useUserProfileContext();
+  const navigate = useNavigate();
 
   useEffect(() => {
     let localUserProfile: z.infer<typeof UserProfileSchema> | false;
@@ -53,14 +55,18 @@ function LoginPage() {
           <br />
 
           <div className="text-green-500 text-lg font-medium">
-            <button onClick={() => setShowForm('s')} className="bg-gray-100 p-2">
+            <button onClick={() => setShowForm('s')} className="border-b-white border-b font-bold hover:bg-white">
               Create
             </button>{' '}
             a new chat room, or{' '}
-            <button onClick={() => setShowForm('j')} className="bg-gray-100 p-2">
+            <button onClick={() => setShowForm('j')} className="border-b-white border-b font-bold hover:bg-white">
               Join
             </button>{' '}
-            an existing chat room.
+            an existing one. Or go to&nbsp;
+            <button onClick={() => navigate('/home')} className="border-b-white border-b font-bold hover:bg-white">
+              Home
+            </button>
+            .
           </div>
         </>
       )}

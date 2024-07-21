@@ -48,7 +48,7 @@ function UserChatBox({
           }
         }}
         value={message}
-        placeholder="Type a message..."
+        placeholder="Do not enter any sensitive or personally identifiable infomation..."
         className="flex-grow px-2 bg-gray-800 border-gray-800 border-2 outline-none resize-none"
       ></textarea>
       <button

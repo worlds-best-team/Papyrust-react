@@ -1,6 +1,6 @@
-import { Link, useParams } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { useUserProfileContext } from '../context/UserContext';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import CreateChatRoom from './Create-chat-room';
 import JoinChatRoom from './Join-chat-room';
 import InviteMembers from './Invite';
@@ -10,7 +10,15 @@ function ChatRoomsSection() {
   const [showCreate, setShowCreate] = useState<boolean>(false);
   const [showJoin, setShowJoin] = useState<boolean>(false);
   const [showInvite, setShowInvite] = useState<boolean>(false);
-  const { chatRoomName = null } = useParams<{ chatRoomName: string }>();
+  const [chatRoomName, setChatRoomName] = useState<string | undefined>(undefined);
+  const location = useLocation();
+
+  useEffect(() => {
+    setChatRoomName((_) => {
+      const pathSegments = location.pathname.split('/').filter((i) => i.trim().length !== 0);
+      return pathSegments[1];
+    });
+  }, [location]);
 
   return (
     <div className="bg-gray-700 flex flex-col h-full">

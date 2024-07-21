@@ -7,7 +7,12 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 const queryClient = new QueryClient();
 
+function awaken(): void {
+  void fetch('https://cipher-io-trpc.onrender.com');
+}
+
 function App() {
+  awaken();
   return (
     <QueryClientProvider client={queryClient}>
       <UserContextProvider>

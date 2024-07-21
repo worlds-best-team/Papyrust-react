@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { useUserProfileContext } from '../context/UserContext';
 import { useState } from 'react';
 import CreateChatRoom from './Create-chat-room';
@@ -10,6 +10,7 @@ function ChatRoomsSection() {
   const [showCreate, setShowCreate] = useState<boolean>(false);
   const [showJoin, setShowJoin] = useState<boolean>(false);
   const [showInvite, setShowInvite] = useState<boolean>(false);
+  const { chatRoomName = null } = useParams<{ chatRoomName: string }>();
 
   return (
     <div className="bg-gray-700 flex flex-col h-full">
@@ -27,16 +28,18 @@ function ChatRoomsSection() {
 
         <div className="flex flex-col gap-3 align-center bg-black bg-opacity-10 p-5">
           Tools
-          <button
-            className="bg-gray-600 p-2 w-full"
-            onClick={() => {
-              setShowInvite(true);
-              setShowCreate(false);
-              setShowJoin(false);
-            }}
-          >
-            Invite
-          </button>
+          {chatRoomName && (
+            <button
+              className="bg-gray-600 p-2 w-full"
+              onClick={() => {
+                setShowInvite(true);
+                setShowCreate(false);
+                setShowJoin(false);
+              }}
+            >
+              Invite
+            </button>
+          )}
           {showInvite && <InviteMembers setShow={setShowInvite} />}
           <div className="flex flex-row gap-3 w-full">
             <button

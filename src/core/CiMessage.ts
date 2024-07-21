@@ -31,6 +31,8 @@ export class CiMessagePreflight {
     this.key = `${createdAt}-S${salt}`;
     this.createdAt = createdAt;
 
+    this.retry = this.retry.bind(this);
+
     this.sendMessage({ chatRoomName, password, messageBody })
       .then(() => {
         this.isSent = true;
@@ -59,12 +61,11 @@ export class CiMessagePreflight {
     this.isFailed = false;
     this.setNewMsgList((p) => [...p]);
 
-    cipherioTRPCClient.chat.sendMessage
-      .mutate({
-        chatRoomName: this.chatRoomName,
-        password: this.chatRoomPassword,
-        messageBody: this.messageBody,
-      })
+    this.sendMessage({
+      chatRoomName: this.chatRoomName,
+      password: this.chatRoomPassword,
+      messageBody: this.messageBody,
+    })
       .then(() => {
         this.isSent = true;
         this.setNewMsgList((p) => [...p]);

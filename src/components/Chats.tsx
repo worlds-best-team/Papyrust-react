@@ -27,6 +27,8 @@ function ChatSection() {
   });
 
   useEffect(() => {
+    document.title = `${chatRoomName} - Papyrust`;
+
     const localChatRoom = userProfile?.savedChatRooms.filter((chatRoom: any) => chatRoom.name === chatRoomName)[0];
 
     let subscription: Unsubscribable;

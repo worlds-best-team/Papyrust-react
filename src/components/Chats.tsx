@@ -8,12 +8,15 @@ import { CiMessagePostflight, CiMessagePreflight } from '../core/CiMessage';
 import { sha256 } from '../utils/crypto';
 import { Unsubscribable } from '@trpc/server/observable';
 import classNames from 'classnames';
+import { typingEventSink } from '../store/typingEventSink';
+import TypingClient from '../core/TypingClient';
 
 function ChatSection() {
   const { chatRoomName } = useParams<{ chatRoomName: string }>();
   const [userProfile, _] = useUserProfileContext();
   const [newMsgList, setNewMsgList] = useState<(CiMessagePreflight | CiMessagePostflight)[]>([]);
   const [userTokenHash, setUserTokenHash] = useState<string | null>(null);
+  const [typingClients, setTypingClients] = useState<TypingClient[]>([]);
 
   const { data } = useQuery({
     queryKey: ['chat_room_messages', chatRoomName],
@@ -27,14 +30,16 @@ function ChatSection() {
   });
 
   useEffect(() => {
+    typingEventSink.setStateActionDispatcher(setTypingClients);
+
     document.title = `${chatRoomName} - Papyrust`;
 
     const localChatRoom = userProfile?.savedChatRooms.filter((chatRoom: any) => chatRoom.name === chatRoomName)[0];
 
-    let subscription: Unsubscribable;
+    let onNewMsgSubscription: Unsubscribable, onTypingClient: Unsubscribable;
     sha256(userProfile!.userToken).then((userTokenHash: string) => {
       setUserTokenHash(userTokenHash);
-      subscription = cipherioTRPCClient.chat.onNewMessage.subscribe(
+      onNewMsgSubscription = cipherioTRPCClient.chat.onNewMessage.subscribe(
         { chatRoomName: chatRoomName!, password: localChatRoom!.password, user_token_hash: userTokenHash },
         {
           onData(data) {
@@ -48,8 +53,26 @@ function ChatSection() {
       );
     });
 
+    onTypingClient = cipherioTRPCClient.chat.onTypingMessage.subscribe(
+      {
+        chatRoomName: chatRoomName!,
+        password: localChatRoom!.password,
+        userName: localChatRoom!.username,
+        userToken: userProfile!.userToken,
+      },
+      {
+        onData(data) {
+          typingEventSink.addTypingClient({ userTokenHash: data.user_token_hash, userName: data.userName });
+        },
+        onError(err) {
+          console.error('Subscription error:', err);
+        },
+      },
+    );
+
     return () => {
-      subscription?.unsubscribe();
+      onNewMsgSubscription?.unsubscribe();
+      onTypingClient?.unsubscribe();
     };
   }, [chatRoomName, userProfile]);
 
@@ -139,8 +162,9 @@ function ChatSection() {
   }
 
   return (
-    <div className="bg-gray-700 flex flex-col">
+    <div className="bg-gray-700 flex flex-col relative">
       <h2 className="sticky text-center">Chats</h2>
+      {<div className="p-1 bg-gray-600 top-6 absolute w-full text-xs">Bhaiya is typing...</div>}
       <div id="msg-container" className="bg-gray-800 p-5 flex-grow h-[600px] overflow-y-scroll">
         {!!data && (
           <ul className="flex flex-col gap-2">

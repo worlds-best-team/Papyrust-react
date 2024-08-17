@@ -12,7 +12,6 @@ function HomePage() {
         className="bg-gray-700 w-full grid grid-cols-3 gap-2 text-white flex-grow"
       >
         <ChatRoomsSection />
-// WW 🌻🌻🌻🌻🌻🌻🌻🌻🌻🌻🌻🌻🌻🌻🌻🌻🌻🌻🌻 
         <Routes>
           <Route element={<StaticChatSection />} path="/" />
           <Route element={<ChatSection />} path="/:chatRoomName" />

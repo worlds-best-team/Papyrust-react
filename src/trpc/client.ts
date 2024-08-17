@@ -9,11 +9,11 @@ export const cipherioTRPCClient = createTRPCProxyClient<AppRouter>({
       },
       true: wsLink({
         client: createWSClient({
-          url: 'ws://localhost:3000/',
+          url: 'wss://cipher-io-trpc.onrender.com/',
         }),
       }),
       false: httpBatchLink({
-        url: 'http://localhost:3000/trpc',
+        url: 'https://cipher-io-trpc.onrender.com/trpc',
       }),
     }),
   ],

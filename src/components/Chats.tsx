@@ -164,7 +164,14 @@ function ChatSection() {
   return (
     <div className="bg-gray-700 flex flex-col relative">
       <h2 className="sticky text-center">Chats</h2>
-      {<div className="p-1 bg-gray-600 top-6 absolute w-full text-xs">Bhaiya is typing...</div>}
+
+      {typingClients.length > 0 && (
+        <div className="p-1 bg-gray-600 top-6 absolute w-full text-xs text-yellow-300">
+          {typingClients.length == 1 && <>{typingClients[0].userName} is typing...</>}
+
+          {typingClients.length > 1 && <>{typingClients.map((client) => client.userName).join(', ')} are typing...</>}
+        </div>
+      )}
       <div id="msg-container" className="bg-gray-800 p-5 flex-grow h-[600px] overflow-y-scroll">
         {!!data && (
           <ul className="flex flex-col gap-2">

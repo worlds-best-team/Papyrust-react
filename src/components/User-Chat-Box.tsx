@@ -3,6 +3,9 @@ import { useParams } from 'react-router-dom';
 import { useUserProfileContext } from '../context/UserContext';
 import { CiMessagePostflight, CiMessagePreflight } from '../core/CiMessage';
 import { sha256 } from '../utils/crypto';
+import { useMutation } from '@tanstack/react-query';
+import { cipherioTRPCClient } from '../trpc/client';
+import { ratelimit } from '../utils/rate';
 
 function UserChatBox({
   setNewMsgList,
@@ -36,12 +39,29 @@ function UserChatBox({
     ]);
   }
 
+  const fireTypingEventMutation = useMutation({
+    mutationKey: ['typing_message'],
+    mutationFn: () =>
+      cipherioTRPCClient.chat.typing.mutate({
+        chatRoomName: chatRoomName!,
+        password: userProfile!.savedChatRooms.filter((chatRoom) => chatRoom.name === chatRoomName)[0].password,
+        userName: userProfile!.savedChatRooms.filter((chatRoom) => chatRoom.name === chatRoomName)[0].username,
+        userToken: userProfile!.userToken,
+      }),
+    onSuccess: () => {
+      console.log(new Date(), 'Typing event fired...');
+    },
+  });
+
+  const ratelimited_fireTypingEventMutate = ratelimit(fireTypingEventMutation.mutate, 3000);
+
   return (
     <div className="flex flex-row my-2 w-full gap-2">
       <textarea
         id="user_message_box"
         onChange={(event) => setMessage(event.target.value)}
         onKeyDown={(event) => {
+          ratelimited_fireTypingEventMutate();
           if (event.key === 'Enter' && !event.shiftKey) {
             event.preventDefault();
             initSendMessage().then(() => setMessage(''));

@@ -40,9 +40,9 @@ function ChatRoomsSection() {
             <button
               className="bg-gray-600 p-2 w-full"
               onClick={() => {
-                setShowInvite(true);
                 setShowCreate(false);
                 setShowJoin(false);
+                setShowInvite(true);
               }}
             >
               Invite

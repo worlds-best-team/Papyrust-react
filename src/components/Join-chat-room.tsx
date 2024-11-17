@@ -28,7 +28,7 @@ function JoinChatRoom({ setShow }: { setShow: Dispatch<SetStateAction<boolean>> 
     },
   });
   return (
-    <div className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px]">
+    <div className="fixed z-[200] left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px]">
       <div className="bg-neutral-900 p-5 flex flex-col items-center justify-center">
         <h2 className="text-yellow-400">[ Join an existing chat room ]</h2>
         <form
